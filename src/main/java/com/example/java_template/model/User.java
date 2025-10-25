@@ -6,10 +6,10 @@ public class User {
     @Schema(description = "Unique identifier for the user", example = "9f21749e-40ed-4ecb-a5a8-27b862c10445")
     private String id;
 
-    @Schema(description = "Full name of the user", example = "Tarun Bhutani")
+    @Schema(description = "Full name of the user", example = "Vishal Yellati")
     private String name;
 
-    @Schema(description = "Email address of the user", example = "tarun@example.com")
+    @Schema(description = "Email address of the user", example = "vishal.yelati@bofa.com")
     private String email;
 
     @Schema(description = "Role of the user", example = "Admin")
