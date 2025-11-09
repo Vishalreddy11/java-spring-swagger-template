@@ -108,16 +108,11 @@ Check:
 ```bash
 java -version
 ```
-If missing:
-```bash
-brew install openjdk@21
-```
 
 ## ✅ Gradle
 ```bash
-brew install gradle
+gradle --version
 ```
-
 ---
 
 # ▶️ How to Run Locally
