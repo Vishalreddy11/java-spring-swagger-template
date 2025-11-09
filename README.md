@@ -1,7 +1,7 @@
-# Java Spring Boot Swagger Template (Enterprise Edition)
+# Java Spring Boot Swagger Template
 
-Welcome to the **Java Spring Boot Swagger Template** — an enterprise‑ready starter kit designed for developers who are new to Java, Spring Boot, REST APIs, or backend development in general.  
-This template mirrors the simplicity and developer experience of the Go template you used previously, but is implemented entirely in **Java + Spring Boot**.
+Welcome to the **Java Spring Boot Swagger Template** — a starter kit designed for developers who are new to Java, Spring Boot, REST APIs, or backend development in general.  
+This template mirrors the simplicity and developer experience and it is implemented entirely in **Java + Spring Boot**.
 
 The goal of this project is simple:
 
@@ -9,7 +9,7 @@ The goal of this project is simple:
 ✅ Include **Swagger API documentation** out of the box  
 ✅ Provide a **PostgreSQL or in-memory fallback** system  
 ✅ Allow developers to extend this template to build full enterprise microservices  
-✅ Allow your CI/CD pipeline to build & deploy workloads **without developers modifying the Dockerfile**  
+✅ Allow Sandbox CI/CD pipeline to build & deploy workloads **without developers modifying the Dockerfile**  
 
 ---
 
@@ -26,9 +26,9 @@ This template includes:
 - Available at:  
   **http://localhost:8081/swagger-ui.html**
 
-### ✅ Dual Storage Mode (Enterprise‑Friendly)
+### ✅ Dual Storage Mode
 1. **PostgreSQL Mode**  
-   If environment variables are provided (`db_host`, `db_user`, `db_pass`, `db_name`, `db_port`), the service:  
+   If environment variables are provided (`db_host`, `db_user`, `db_pass`, `db_name`), the service:  
    - Connects to Postgres  
    - Runs a lightweight auto-migration (`CREATE TABLE IF NOT EXISTS users`)  
    - Stores all users in a real database  
@@ -41,7 +41,7 @@ This template includes:
    - Data resets on restart
 
 ### ✅ Enterprise-Ready Dockerfile
-A production-ready container image is built using:  
+A container image is built using:  
 - Multi-stage Gradle build  
 - Java 21 runtime  
 - Zero modification needed by developers  
@@ -118,16 +118,6 @@ brew install openjdk@21
 brew install gradle
 ```
 
-## ✅ Docker (for container builds)
-Download Docker Desktop from:  
-https://www.docker.com/products/docker-desktop/
-
-## ✅ Optional: PostgreSQL (Local)
-You can run Postgres using Docker:
-```bash
-docker run --name pg-users   -e POSTGRES_USER=postgres   -e POSTGRES_PASSWORD=postgres   -e POSTGRES_DB=usersdb   -p 5433:5432   -v pgdata:/var/lib/postgresql/data   -d postgres:15
-```
-
 ---
 
 # ▶️ How to Run Locally
@@ -150,11 +140,11 @@ Open:
 Set the environment variables:
 
 ```bash
-export db_host=localhost
-export db_user=postgres
-export db_pass=postgres
-export db_name=usersdb
-export db_port=5433
+export db_host=<>
+export db_user=<>
+export db_pass=<>
+export db_name=<>
+export db_port=<>
 ```
 
 Run the app:
@@ -171,29 +161,11 @@ UserService -> Using JDBC backend
 ```
 
 Now your API persists data in a real DB.
+NOTE: Only if the exported variables can establish a DB Connection
 
 ---
 
-# 🐳 Running Through Docker
-
-Build the image:
-```bash
-docker build -t java-template-app .
-```
-
-Run (in-memory mode):
-```bash
-docker run -d -p 8081:8081 --name java-template java-template-app
-```
-
-Run (with Postgres):
-```bash
-docker run -d -p 8081:8081   --name java-template   -e db_host=host.docker.internal   -e db_user=postgres   -e db_pass=postgres   -e db_name=usersdb   -e db_port=5433   java-template-app
-```
-
----
-
-# 🧱 How To Extend This Template (Enterprise Guidance)
+# 🧱 How To Extend This Template
 
 You may add:
 
@@ -211,7 +183,6 @@ You **should NOT modify**:
 
 ❌ `Dockerfile`  
 ❌ `build.gradle` (except adding dependencies)  
-❌ `DemoApplication.java` (unless necessary)  
 
 ### ✅ Why?
 Your enterprise CI/CD pipeline expects the structure as-is.  
@@ -227,15 +198,12 @@ Developers should add code here:
 src/main/java/com/example/template/
 ```
 
-Recommended developer workflow:
-
-1. Clone this template  
-2. Create a new feature branch  
+1. Fork this template  
 3. Add routes/models/services  
 4. Test locally  
 5. Push to your repo  
-6. Your pipeline picks up the code and builds the Docker image  
-7. Deploy to Kubernetes/Cloud environment  
+6. Make your repository Public 
+7. Deploy to Kubernetes/Cloud environment via our Sandbox Pipeline
 
 ---
 
@@ -258,24 +226,11 @@ curl http://localhost:8081/api/v1/users
 ### ❌ App uses in-memory mode, not Postgres  
 Fix: Ensure environment variables are exported **before** running Gradle.
 
-### ❌ Postgres container restarts and data resets  
-Fix: Always use a Docker volume:
-```
--v pgdata:/var/lib/postgresql/data
-```
-
 ### ❌ Swagger not loading  
 Fix: Ensure app is running on port 8081:
 ```
 gradle bootRun
 ```
-
-### ❌ “Connection refused” when using Docker  
-Use:
-```
-db_host=host.docker.internal
-```
-
 ---
 
 # ✅ Final Notes for Users
@@ -286,4 +241,3 @@ db_host=host.docker.internal
 - This project is designed to scale with you:
   - Add gRPC, Kafka, Redis, S3, etc.
   - Plug into your infrastructure.
-
