@@ -1,128 +1,289 @@
-# java-spring-swagger-template
+# Java Spring Boot Swagger Template (Enterprise Edition)
 
-## 1. What this project is
-This repo is a **Java REST API template** that comes with:
-- A basic Spring Boot service (Spring Boot = Java web framework)
-- Automatically generated API docs using Swagger / OpenAPI
-- A runnable local server
-- A production-style Docker image
+Welcome to the **Java Spring Boot Swagger Template** — an enterprise‑ready starter kit designed for developers who are new to Java, Spring Boot, REST APIs, or backend development in general.  
+This template mirrors the simplicity and developer experience of the Go template you used previously, but is implemented entirely in **Java + Spring Boot**.
 
-You can use this as a starting point to build real backend services.
+The goal of this project is simple:
 
-This template gives you:
-- A health check / sample endpoint
-- Built-in Swagger UI so you can test APIs in the browser
-- Gradle wrapper so you don’t have to install Gradle manually
-- A Dockerfile that builds a runnable container image
+✅ Give developers a **ready-to-run**, production-grade Java service  
+✅ Include **Swagger API documentation** out of the box  
+✅ Provide a **PostgreSQL or in-memory fallback** system  
+✅ Allow developers to extend this template to build full enterprise microservices  
+✅ Allow your CI/CD pipeline to build & deploy workloads **without developers modifying the Dockerfile**  
 
-> Goal: You clone, you run, you’re live on `http://localhost:<PORT>` with docs.
+---
 
-## 2. Tech stack (in plain English)
+# 🚀 What This Template Provides
 
-### Java
-Java is the programming language this service is written in.
+This template includes:
 
-### Spring Boot
-Spring Boot is a framework for building APIs in Java. It lets you define routes like `/users`, `/login`, etc.
+### ✅ Fully working REST API
+- `GET /api/v1/users`
+- `GET /api/v1/users/{id}`
+- `POST /api/v1/users`
 
-### Swagger / OpenAPI
-Swagger/OpenAPI describes your API (endpoints, inputs, responses). Swagger UI allows you to test APIs easily in the browser.
+### ✅ Automatic Swagger UI
+- Available at:  
+  **http://localhost:8081/swagger-ui.html**
 
-### Gradle
-Gradle compiles the code, downloads dependencies, and builds the `.jar` file. The Gradle wrapper lets you run builds without installing Gradle globally.
+### ✅ Dual Storage Mode (Enterprise‑Friendly)
+1. **PostgreSQL Mode**  
+   If environment variables are provided (`db_host`, `db_user`, `db_pass`, `db_name`, `db_port`), the service:  
+   - Connects to Postgres  
+   - Runs a lightweight auto-migration (`CREATE TABLE IF NOT EXISTS users`)  
+   - Stores all users in a real database  
 
-### Docker
-A pre-built Dockerfile is included to containerize your application. **Do not modify the Dockerfile unless you know what you’re doing.**
+2. **In‑Memory Mode (Default)**  
+   If DB configuration is missing or invalid, the service **falls back automatically** to fast in-memory storage.  
+   - Great for local development  
+   - Nothing to install  
+   - Very fast  
+   - Data resets on restart
 
-## 3. Project layout
+### ✅ Enterprise-Ready Dockerfile
+A production-ready container image is built using:  
+- Multi-stage Gradle build  
+- Java 21 runtime  
+- Zero modification needed by developers  
+- Your pipeline will use this Dockerfile as-is  
+
+✅ **Please do NOT modify the Dockerfile.**  
+This ensures your CI/CD pipeline can build and deploy consistently.
+
+---
+
+# 📦 Project Structure Explained (Beginner-Friendly)
+
 ```
-java-spring-swagger-template/
-├─ src/
-│  ├─ main/java/...        <-- Your Java code
-│  ├─ main/resources/...   <-- Config files
-│  └─ test/...             <-- Tests
-├─ build.gradle
-├─ settings.gradle
-├─ gradlew / gradlew.bat
-├─ gradle/wrapper/
-├─ Dockerfile
-└─ .gitignore
+java-spring-swagger-template
+├── Dockerfile                   → Container build file (DO NOT MODIFY)
+├── build.gradle                 → Dependency & build configuration
+├── settings.gradle              → Project name
+├── src
+│   ├── main
+│   │   ├── java/com/example/template
+│   │   │   ├── DemoApplication.java       → Main entry point
+│   │   │   ├── config
+│   │   │   │   └── AppConfig.java         → Chooses DB or in-memory mode
+│   │   │   ├── controller
+│   │   │   │   ├── UserController.java    → User API endpoints
+│   │   │   │   └── HealthController.java  → /health endpoint
+│   │   │   ├── model
+│   │   │   │   └── User.java              → Entity model
+│   │   │   ├── dto
+│   │   │   │   └── CreateUserRequest.java → Request payload
+│   │   │   └── service
+│   │   │       ├── UserService.java       → Abstraction
+│   │   │       └── impl
+│   │   │           ├── InMemoryUserService.java
+│   │   │           └── JdbcUserService.java
+│   └── resources
+│       └── application.properties → Basic Spring config
 ```
 
-## 4. Prerequisites
-- Java 21+ (JDK)
-- Terminal or command prompt
+If you're new to Java, here's what matters:
 
-No need to install Gradle or Maven manually.
+### ✅ **Spring Boot**  
+A framework that removes complexity and lets you build production Java services very quickly.
 
-## 5. Run locally (without Docker)
+### ✅ **Gradle**  
+A build tool (like Maven but easier) that:
+- downloads dependencies  
+- compiles code  
+- runs tests  
+- builds JAR files  
+- builds Docker images in this template
 
-### Step 1: Clone
+### ✅ **Swagger (SpringDoc)**  
+Automatically generates API docs & UI.
+
+---
+
+# 🛠 Tools You Must Install Before Running
+
+Install the following:
+
+## ✅ Java 21
+Check:
 ```bash
-git clone https://github.com/Vishalreddy11/java-spring-swagger-template.git
-cd java-spring-swagger-template
+java -version
 ```
-
-### Step 2: Build
+If missing:
 ```bash
-./gradlew clean build   # Mac/Linux
-gradlew.bat clean build # Windows
+brew install openjdk@21
 ```
 
-### Step 3: Run
+## ✅ Gradle
 ```bash
-java -jar build/libs/*.jar
+brew install gradle
 ```
 
-Visit `http://localhost:8081/swagger-ui.html` to view Swagger UI.
+## ✅ Docker (for container builds)
+Download Docker Desktop from:  
+https://www.docker.com/products/docker-desktop/
 
-## 6. Run in dev mode
+## ✅ Optional: PostgreSQL (Local)
+You can run Postgres using Docker:
 ```bash
-./gradlew bootRun
+docker run --name pg-users   -e POSTGRES_USER=postgres   -e POSTGRES_PASSWORD=postgres   -e POSTGRES_DB=usersdb   -p 5433:5432   -v pgdata:/var/lib/postgresql/data   -d postgres:15
 ```
 
-If you get a JDK error, install Java 21+.
+---
 
-## 7. Run with Docker
+# ▶️ How to Run Locally
 
-### Build
+## ✅ Option 1 — Run in In‑Memory Mode (No Database Needed)
+This is the default.
+
+```bash
+gradle bootRun
+```
+
+Open:
+- Swagger → http://localhost:8081/swagger-ui.html  
+- GET users → http://localhost:8081/api/v1/users  
+
+---
+
+## ✅ Option 2 — Run with PostgreSQL (Local or Remote)
+
+Set the environment variables:
+
+```bash
+export db_host=localhost
+export db_user=postgres
+export db_pass=postgres
+export db_name=usersdb
+export db_port=5433
+```
+
+Run the app:
+
+```bash
+gradle --stop   # refresh daemon env
+gradle bootRun
+```
+
+Watch for this log:
+```
+Connected to Postgres at localhost:5433 / usersdb
+UserService -> Using JDBC backend
+```
+
+Now your API persists data in a real DB.
+
+---
+
+# 🐳 Running Through Docker
+
+Build the image:
 ```bash
 docker build -t java-template-app .
 ```
 
-### Run
+Run (in-memory mode):
 ```bash
 docker run -d -p 8081:8081 --name java-template java-template-app
 ```
 
-View logs:
+Run (with Postgres):
 ```bash
-docker logs -f java-template
+docker run -d -p 8081:8081   --name java-template   -e db_host=host.docker.internal   -e db_user=postgres   -e db_pass=postgres   -e db_name=usersdb   -e db_port=5433   java-template-app
 ```
 
-Access Swagger UI at `http://localhost:8081/swagger-ui.html`.
+---
 
-Stop container:
-```bash
-docker stop java-template
+# 🧱 How To Extend This Template (Enterprise Guidance)
+
+You may add:
+
+✅ New API routes  
+✅ New controllers  
+✅ New service classes  
+✅ New models  
+✅ Business logic  
+✅ Database queries  
+✅ Integrations (Kafka, Redis, etc.)  
+✅ Authentication / Authorization  
+✅ CI/CD workflows (your own repo)  
+
+You **should NOT modify**:
+
+❌ `Dockerfile`  
+❌ `build.gradle` (except adding dependencies)  
+❌ `DemoApplication.java` (unless necessary)  
+
+### ✅ Why?
+Your enterprise CI/CD pipeline expects the structure as-is.  
+If developers modify the Dockerfile, the workload may fail to build or deploy.
+
+---
+
+# 🛠 Where to Contribute Code
+
+Developers should add code here:
+
+```
+src/main/java/com/example/template/
 ```
 
-## 8. Database (optional)
-If using Postgres:
+Recommended developer workflow:
+
+1. Clone this template  
+2. Create a new feature branch  
+3. Add routes/models/services  
+4. Test locally  
+5. Push to your repo  
+6. Your pipeline picks up the code and builds the Docker image  
+7. Deploy to Kubernetes/Cloud environment  
+
+---
+
+# ✅ Testing Your API
+
+### Create a user:
 ```bash
-docker run --name my-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=usersdb -p 5433:5432 -d postgres:15
-```
-Then run the app with:
-```bash
--e DBHOST=host.docker.internal -e DBUSER=postgres -e DBPASS=postgres -e DBNAME=usersdb -e DBPORT=5433
+curl -X POST http://localhost:8081/api/v1/users   -H "Content-Type: application/json"   -d '{"name":"Ada Lovelace","email":"ada@example.com"}'
 ```
 
-## 9. Common issues
-- **Port in use:** change host port with `-p 9090:8081`
-- **JDK mismatch:** install Java 21+
-- **Swagger not showing:** try `/swagger-ui.html` or `/swagger-ui/index.html`
+### List users:
+```bash
+curl http://localhost:8081/api/v1/users
+```
 
-## 10. Summary
-- Clone → Build → Run → Swagger works.
-- Gradle compiles, Spring Boot serves, Docker containers it.
-- Don’t modify Dockerfile unless necessary.
+---
+
+# ✅ Troubleshooting (Beginner Friendly)
+
+### ❌ App uses in-memory mode, not Postgres  
+Fix: Ensure environment variables are exported **before** running Gradle.
+
+### ❌ Postgres container restarts and data resets  
+Fix: Always use a Docker volume:
+```
+-v pgdata:/var/lib/postgresql/data
+```
+
+### ❌ Swagger not loading  
+Fix: Ensure app is running on port 8081:
+```
+gradle bootRun
+```
+
+### ❌ “Connection refused” when using Docker  
+Use:
+```
+db_host=host.docker.internal
+```
+
+---
+
+# ✅ Final Notes for Users
+
+- The folder structure is intentionally simple.
+- Developers must **not** modify the Dockerfile.
+- Your Sandbox pipelines will build and deploy this service.
+- This project is designed to scale with you:
+  - Add gRPC, Kafka, Redis, S3, etc.
+  - Plug into your infrastructure.
+
